@@ -9,9 +9,9 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.DB.Architecture;
-using RevitWPFTemplate.ViewModels;
+using ReverseBlocks.ViewModels;
 
-namespace RevitWPFTemplate.Infrastructure
+namespace ReverseBlocks.Infrastructure
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]

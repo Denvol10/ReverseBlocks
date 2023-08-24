@@ -27,7 +27,7 @@ namespace ReverseBlocks.ViewModels
 
         #region Заголовок
 
-        private string _title = "Комнаты";
+        private string _title = "Изменить пространственную ориентацию блока";
 
         public string Title
         {

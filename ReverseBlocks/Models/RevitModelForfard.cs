@@ -59,5 +59,12 @@ namespace ReverseBlocks
             var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
             BlockElements = RevitGeometryUtils.GetBlocksById(Doc, elemIds);
         }
+
+        #region Изменить ориентацию блоков
+        public void ChangeBlocksOrientation(bool isReversed, bool isMirrored, bool isTurned)
+        {
+
+        }
+        #endregion
     }
 }

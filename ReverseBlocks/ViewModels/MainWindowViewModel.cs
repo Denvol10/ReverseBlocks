@@ -90,6 +90,23 @@ namespace ReverseBlocks.ViewModels
         }
         #endregion
 
+        #region Изменить оринтацию блока
+        public ICommand ChangeBlocksOrientationCommand { get; }
+
+        private void OnChangeBlocksOrientationCommandExecuted(object parameter)
+        {
+            RevitModel.ChangeBlocksOrientation(IsReversed, IsMirrored, IsTurned);
+        }
+
+        private bool CanChangeBlocksOrientationCommandExecute(object parameter)
+        {
+            if (string.IsNullOrEmpty(_blockElementIds))
+                return false;
+
+            return true;
+        }
+        #endregion
+
         #region Закрыть окно
         public ICommand CloseWindowCommand { get; }
 
@@ -141,6 +158,7 @@ namespace ReverseBlocks.ViewModels
 
             #region Команды
             GetBlockElementsCommand = new LambdaCommand(OnGetBlockElementsCommandExecuted, CanGetBlockElementsCommandExecute);
+            ChangeBlocksOrientationCommand = new LambdaCommand(OnChangeBlocksOrientationCommandExecuted, CanChangeBlocksOrientationCommandExecute);
             CloseWindowCommand = new LambdaCommand(OnCloseWindowCommandExecuted, CanCloseWindowCommandExecute);
             #endregion
         }

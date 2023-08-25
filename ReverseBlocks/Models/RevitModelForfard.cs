@@ -43,6 +43,21 @@ namespace ReverseBlocks
         {
             BlockElements = RevitGeometryUtils.GetElementsBySelection(Uiapp, out _blockElementIds);
         }
+
+        // Проверка на то существуют ли блоки в модели
+        public bool IsBlocksExistInModel(string elemIdsInSettings)
+        {
+            var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
+
+            return RevitGeometryUtils.IsElemsExistInModel(Doc, elemIds, typeof(FamilyInstance));
+        }
         #endregion
+
+        // Получение блоков из Settings
+        public void GetBlocksBySettings(string elemIdsInSettings)
+        {
+            var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
+            BlockElements = RevitGeometryUtils.GetBlocksById(Doc, elemIds);
+        }
     }
 }

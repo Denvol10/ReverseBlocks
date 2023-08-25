@@ -63,7 +63,29 @@ namespace ReverseBlocks.ViewModels
         }
         #endregion
 
+        #region Закрыть окно
+        public ICommand CloseWindowCommand { get; }
+
+        private void OnCloseWindowCommandExecuted(object parameter)
+        {
+            SaveSettings();
+            RevitCommand.mainView.Close();
+        }
+
+        private bool CanCloseWindowCommandExecute(object parameter)
+        {
+            return true;
+        }
         #endregion
+
+
+        #endregion
+
+        private void SaveSettings()
+        {
+            Properties.Settings.Default.BlockElementIds = BlockElementIds;
+            Properties.Settings.Default.Save();
+        }
 
 
         #region Конструктор класса MainWindowViewModel
@@ -71,8 +93,25 @@ namespace ReverseBlocks.ViewModels
         {
             RevitModel = revitModel;
 
+            #region Инициализация свойств из Settings
+
+            #region Инициализация блоков
+            if (!(Properties.Settings.Default.BlockElementIds is null))
+            {
+                string blockElemIdsInSettings = Properties.Settings.Default.BlockElementIds;
+                if (RevitModel.IsBlocksExistInModel(blockElemIdsInSettings) && !string.IsNullOrEmpty(blockElemIdsInSettings))
+                {
+                    BlockElementIds = blockElemIdsInSettings;
+                    RevitModel.GetBlocksBySettings(blockElemIdsInSettings);
+                }
+            }
+            #endregion
+
+            #endregion
+
             #region Команды
             GetBlockElementsCommand = new LambdaCommand(OnGetBlockElementsCommandExecuted, CanGetBlockElementsCommandExecute);
+            CloseWindowCommand = new LambdaCommand(OnCloseWindowCommandExecuted, CanCloseWindowCommandExecute);
             #endregion
         }
 

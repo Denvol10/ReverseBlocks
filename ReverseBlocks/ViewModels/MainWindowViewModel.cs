@@ -44,6 +44,33 @@ namespace ReverseBlocks.ViewModels
         }
         #endregion
 
+        #region Развернут ли блок
+        private bool _isReversed = Properties.Settings.Default.IsReversed;
+        public bool IsReversed
+        {
+            get => _isReversed;
+            set => Set(ref _isReversed, value);
+        }
+        #endregion
+
+        #region Отзеркален ли блок
+        private bool _isMirrored = Properties.Settings.Default.IsMirrored;
+        public bool IsMirrored
+        {
+            get => _isMirrored;
+            set => Set(ref _isMirrored, value);
+        }
+        #endregion
+
+        #region Обращен ли блок
+        private bool _isTurned = Properties.Settings.Default.IsTurned;
+        public bool IsTurned
+        {
+            get => _isTurned;
+            set => Set(ref _isTurned, value);
+        }
+        #endregion
+
         #region Команды
 
         #region Получение блоков пролетного строения
@@ -84,6 +111,9 @@ namespace ReverseBlocks.ViewModels
         private void SaveSettings()
         {
             Properties.Settings.Default.BlockElementIds = BlockElementIds;
+            Properties.Settings.Default.IsReversed = IsReversed;
+            Properties.Settings.Default.IsMirrored = IsMirrored;
+            Properties.Settings.Default.IsTurned = IsTurned;
             Properties.Settings.Default.Save();
         }
 

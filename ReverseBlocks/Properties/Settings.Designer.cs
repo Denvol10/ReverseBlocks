@@ -34,5 +34,41 @@ namespace ReverseBlocks.Properties {
                 this["BlockElementIds"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsReversed {
+            get {
+                return ((bool)(this["IsReversed"]));
+            }
+            set {
+                this["IsReversed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsMirrored {
+            get {
+                return ((bool)(this["IsMirrored"]));
+            }
+            set {
+                this["IsMirrored"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsTurned {
+            get {
+                return ((bool)(this["IsTurned"]));
+            }
+            set {
+                this["IsTurned"] = value;
+            }
+        }
     }
 }

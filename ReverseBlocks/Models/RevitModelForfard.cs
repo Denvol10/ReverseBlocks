@@ -63,7 +63,73 @@ namespace ReverseBlocks
         #region Изменить ориентацию блоков
         public void ChangeBlocksOrientation(bool isReversed, bool isMirrored, bool isTurned)
         {
+            var blockSetup = new List<(Element Element, IList<ElementId> Points, double Length)>();
 
+            foreach (var block in BlockElements)
+            {
+                Parameter lengthParameter = block.LookupParameter("Длина блока");
+                double length = lengthParameter.AsDouble();
+
+                var adaptivePointIds = AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds(block as FamilyInstance);
+
+                blockSetup.Add((block, adaptivePointIds, length));
+            }
+
+
+            using (Transaction trans = new Transaction(Doc, "Changed Bloks Orientation"))
+            {
+                trans.Start();
+                foreach (var block in blockSetup)
+                {
+                    var firstReferencePoint = Doc.GetElement(block.Points.First()) as ReferencePoint;
+                    var secondReferencePoint = Doc.GetElement(block.Points.ElementAt(1)) as ReferencePoint;
+                    var thirdReferencePoint = Doc.GetElement(block.Points.Last()) as ReferencePoint;
+
+                    XYZ alongVector = (secondReferencePoint.Position - firstReferencePoint.Position).Normalize() * block.Length;
+                    XYZ normalVector = (thirdReferencePoint.Position - firstReferencePoint.Position).Normalize();
+
+                    XYZ newFirstPointPosition = firstReferencePoint.Position;
+                    XYZ newSecondPointPosition = secondReferencePoint.Position;
+                    XYZ newThirdPointPosition = thirdReferencePoint.Position;
+
+                    Parameter blockTurnParameter = block.Element.get_Parameter(BuiltInParameter.FLEXIBLE_INSTANCE_FLIP);
+                    int turnOposite = blockTurnParameter.AsInteger() == 0 ? 1 : 0;
+
+                    if (isReversed)
+                    {
+                        newFirstPointPosition = newFirstPointPosition + alongVector;
+                        newSecondPointPosition = newSecondPointPosition
+                                                     + alongVector.Normalize()
+                                                     * (block.Length - UnitUtils.ConvertToInternalUnits(2, UnitTypeId.Meters));
+
+                        newThirdPointPosition = newThirdPointPosition + alongVector;
+
+                        blockTurnParameter.Set(turnOposite);
+                    }
+
+                    if (isMirrored)
+                    {
+                        newThirdPointPosition = newThirdPointPosition + normalVector.Negate() * UnitUtils.ConvertToInternalUnits(2, UnitTypeId.Meters);
+                    }
+
+                    if (isTurned)
+                    {
+                        blockTurnParameter.Set(turnOposite);
+                    }
+
+                    firstReferencePoint.Position = newFirstPointPosition;
+                    secondReferencePoint.Position = newSecondPointPosition;
+                    thirdReferencePoint.Position = newThirdPointPosition;
+                }
+                trans.Commit();
+
+                Element firstElement = BlockElements.FirstOrDefault();
+                if(!(firstElement is null))
+                {
+                    Uidoc.ShowElements(firstElement);
+                    Uidoc.RefreshActiveView();
+                }
+            }
         }
         #endregion
     }

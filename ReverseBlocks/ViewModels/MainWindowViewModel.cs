@@ -26,7 +26,6 @@ namespace ReverseBlocks.ViewModels
         }
 
         #region Заголовок
-
         private string _title = "Изменить пространственную ориентацию блока";
 
         public string Title
@@ -34,51 +33,50 @@ namespace ReverseBlocks.ViewModels
             get => _title;
             set => Set(ref _title, value);
         }
-
         #endregion
 
-        #region Список комнат
-
-        private ObservableCollection<string> _rooms;
-
-        public ObservableCollection<string> Rooms
+        #region Блоки пролетного строения
+        private string _blockElementIds;
+        public string BlockElementIds
         {
-            get => _rooms;
-            set => Set(ref _rooms, value);
+            get => _blockElementIds;
+            set => Set(ref _blockElementIds, value);
         }
-
         #endregion
 
         #region Команды
 
-        #region Команда получение всех комнат
+        #region Получение блоков пролетного строения
+        public ICommand GetBlockElementsCommand { get; }
 
-        public ICommand GetRoomsCommand { get; }
-
-        private void OnGetRoomsCommandExecuted(object parameter)
+        private void OnGetBlockElementsCommandExecuted(object parameter)
         {
-            Rooms = new ObservableCollection<string>(RevitModel.GetAllRooms());
+            RevitCommand.mainView.Hide();
+            RevitModel.GetBlockElementsBySelection();
+            BlockElementIds = RevitModel.BlockElementIds;
+            RevitCommand.mainView.ShowDialog();
         }
-
-        private bool CanGetRoomsCommandExecute(object parameter)
+        
+        private bool CanGetBlockElementsCommandExecute(object parameter)
         {
             return true;
         }
-
         #endregion
 
         #endregion
 
 
         #region Конструктор класса MainWindowViewModel
-        public MainWindowViewModel()
+        public MainWindowViewModel(RevitModelForfard revitModel)
         {
-            #region
+            RevitModel = revitModel;
 
-            GetRoomsCommand = new LambdaCommand(OnGetRoomsCommandExecuted, CanGetRoomsCommandExecute);
-
+            #region Команды
+            GetBlockElementsCommand = new LambdaCommand(OnGetBlockElementsCommandExecuted, CanGetBlockElementsCommandExecute);
             #endregion
         }
+
+        public MainWindowViewModel() { }
         #endregion
     }
 }

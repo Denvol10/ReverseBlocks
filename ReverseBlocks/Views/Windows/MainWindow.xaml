@@ -76,9 +76,9 @@
                         <TextBlock Text="Блоки"
                                    Style="{StaticResource TextAboveButton}" />
                         <Button Style="{StaticResource SelectButton}"
-                                Command="{Binding GetBeamAxisBySelectionCommand}" />
+                                Command="{Binding GetBlockElementsCommand}" />
                     </UniformGrid>
-                    <TextBox Text="{Binding BeamAxisIds}"
+                    <TextBox Text="{Binding BlockElementIds}"
                              Style="{StaticResource SelectedItemsBox}" />
                 </UniformGrid>
                 <UniformGrid Rows="3" Margin="0,4,0,0">
